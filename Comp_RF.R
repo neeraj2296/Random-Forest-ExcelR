@@ -1,13 +1,16 @@
+#Including the necassary libraries
 install.packages("randomForest")
 install.packages("MASS")
 library(randomForest)
 library(MASS)
 library(caret)
 
-# USe the set.seed function so that we get same results each time 
+# Use the set.seed function so that we get same results each time 
 set.seed(123)
+#Loadin the data Set
 Com_Data <- read.csv(file.choose())
 str(Com_Data)
+#Factorising the data set
 Com_Data$ShelveLoc<-as.factor(Com_Data$ShelveLoc)
 Com_Data$Urban<-as.factor(Com_Data$Urban)
 Com_Data$US<-as.factor(Com_Data$US)
@@ -42,31 +45,26 @@ head(pred1)
 head(train$high_sales)
 
 # looks like the first six predicted value and original value matches.
-
 confusionMatrix(pred1, train$high_sales)   # 100 % accuracy on training data 
 
 
 # more than 95% Confidence Interval. 
 # Sensitivity for Yes and No is 100 % 
-
 # Prediction with test data - Test Data 
 pred2 <- predict(rf, test)
 confusionMatrix(pred2, test$high_sales) # 84.35 % accuracy on test data 
 
 # Error Rate in Random Forest Model :
 plot(rf)
-
 rf1 <- randomForest(high_sales~., data=train, ntree = 300, mtry = 3, importance = TRUE,
                     proximity = TRUE)
 rf1
-
 pred3 <- predict(rf1, train)
 confusionMatrix(pred1, train$high_sales)  # 100 % accuracy on training data 
 
 
 # Around 98% Confidence Interval. 
 # Sensitivity for Yes and No is 100 % 
-
 # test data prediction using the Tuned RF1 model
 pred4 <- predict(rf1, test)
 confusionMatrix(pred4, test$high_sales) # 84.35 % accuracy on test data 
@@ -75,7 +73,6 @@ confusionMatrix(pred4, test$high_sales) # 84.35 % accuracy on test data
 
 
 # no of nodes of trees
-
 hist(treesize(rf1), main = "No of Nodes for the trees")
 # Majority of the trees has an average number of 45 to 50 nodes. 
 # Variable Importance :
